@@ -1,0 +1,43 @@
+name: Deploy Infra
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  CI: true
+  AZURE_RG_NAME: minecraft
+
+jobs:
+  deploy:
+    name: Deploy Infra
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  
+      - name: Deploy
+        id: deploy
+        uses: azure/bicep-deploy@v2
+        with:
+          type: deploymentStack
+          operation: create
+          name: minecraft
+          scope: resourceGroup
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resource-group-name: ${{ env.AZURE_RG_NAME }}
+          parameters-file: infra/main.bicepparam
+          action-on-unmanage-resources: delete
+          deny-settings-mode: denyDelete
