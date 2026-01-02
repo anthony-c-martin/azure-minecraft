@@ -12,7 +12,7 @@ param config = {
   mode: 'survival'
   admins: [
     'choney123'
-    'Mshanga'
+    'mshanga123'
     'skelm123'
   ]
   players: []
