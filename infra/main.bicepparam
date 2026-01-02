@@ -12,7 +12,10 @@ param config = {
   mode: 'survival'
   admins: [
     'choney123'
+    'Mshanga'
+    'skelm123'
   ]
+  players: []
 }
 
 param dns = {

@@ -21,22 +21,10 @@ param dns {
 param now string = toLower(utcNow())
 
 @description('Number of CPU cores assigned to the container app.')
-@allowed([
-  '0.5'
-  '1.0'
-  '1.5'
-  '2.0'
-])
-param cpu string
+param cpu '0.5' | '1.0' | '1.5' | '2.0'
 
 @description('Memory allocated to the container app.')
-@allowed([
-  '1.0Gi'
-  '2.0Gi'
-  '3.0Gi'
-  '4.0Gi'
-])
-param memory string
+param memory '1.0Gi' | '2.0Gi' | '3.0Gi' | '4.0Gi'
 
 var containerImage = 'docker.io/itzg/minecraft-server:latest'
 
@@ -53,13 +41,17 @@ param minReplicas int = 0
 
 param config {
   maxPlayers: int
-  mode: 'survival'
-  difficulty: 'normal'
+  mode: 'creative' | 'survival' | 'adventure' | 'spectator'
+  difficulty: 'peaceful' | 'easy' | 'normal' | 'hard'
+  @description('List of Minecraft usernames with admin (op) privileges.')
   admins: string[]
+  @description('List of Minecraft usernames allowed to join the server.')
+  players: string[]
 }
 
 @description('The environment variables required to start a Minecraft server.')
-var env = [
+// See https://docker-minecraft-server.readthedocs.io/en/latest/configuration/server-properties for a full list
+var serverVariables = [
   {
     name: 'EULA'
     value: 'TRUE'
@@ -87,6 +79,10 @@ var env = [
   {
     name: 'OPS'
     value: join(config.admins, ' ')
+  }
+  {
+    name: 'WHITELIST'
+    value: join(config.players, ' ')
   }
   {
     name: 'SNOOPER_ENABLED' // disable telemetry
@@ -131,7 +127,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
         {
           image: containerImage
           name: containerName
-          env: env
+          env: serverVariables
           args: []
           probes: []
           volumeMounts: [
