@@ -69,20 +69,12 @@ var serverVariables = [
     value: config.difficulty
   }
   {
-    name: 'UID'
-    value: '0'
-  }
-  {
-    name: 'GID'
-    value: '0'
-  }
-  {
     name: 'OPS'
-    value: join(config.admins, ' ')
+    value: join(config.admins, ',')
   }
   {
     name: 'WHITELIST'
-    value: join(config.players, ' ')
+    value: join(config.players, ',')
   }
   {
     name: 'SNOOPER_ENABLED' // disable telemetry
