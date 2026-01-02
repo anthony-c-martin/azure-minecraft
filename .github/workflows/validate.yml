@@ -1,0 +1,25 @@
+name: Validate Infra
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  deploy:
+    name: Validate Infra
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+  
+      - name: Validate
+        run: |
+          az bicep lint \
+            --file ./infra/main.bicepparam
