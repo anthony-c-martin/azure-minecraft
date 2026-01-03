@@ -14,6 +14,7 @@ param config = {
     'choney123'
     'mshanga123'
     'skelm123'
+    'bronsonbronson'
   ]
   players: []
 }
